@@ -58,6 +58,7 @@ body {
 .title-stars {
     position: absolute;
     inset: 0;
+    pointer-events: none;
     background-image:
         radial-gradient(2px 2px at 20px 30px, #ffffff33, transparent),
         radial-gradient(2px 2px at 40px 70px, #ffffff22, transparent),
