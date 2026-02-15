@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fillory - A Magicians RPG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Title Screen -->
+    <div id="screen-title" class="screen active">
+        <div class="title-container">
+            <div class="title-stars"></div>
+            <h1 class="game-title">Fillory</h1>
+            <p class="game-subtitle">A Magicians RPG</p>
+            <button class="btn btn-primary btn-lg" onclick="Game.showScreen('character-create')">Begin Your Journey</button>
+            <button class="btn btn-secondary" onclick="Game.loadGame()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Character Creation -->
+    <div id="screen-character-create" class="screen">
+        <div class="panel panel-center">
+            <h2>Welcome to Brakebills</h2>
+            <p class="flavor-text">The Entrance Exam has revealed your magical aptitude. Choose your path wisely.</p>
+
+            <div class="form-group">
+                <label for="player-name">Your Name</label>
+                <input type="text" id="player-name" placeholder="Enter your name..." maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label>Choose Your Discipline</label>
+                <div class="discipline-grid">
+                    <div class="discipline-card" data-discipline="physical" onclick="Game.selectDiscipline(this)">
+                        <div class="discipline-icon">&#9889;</div>
+                        <h3>Physical</h3>
+                        <p>Telekinesis, force manipulation, and combat magic. Strong in battle.</p>
+                        <div class="discipline-stats">+3 Power, +1 Defense</div>
+                    </div>
+                    <div class="discipline-card" data-discipline="knowledge" onclick="Game.selectDiscipline(this)">
+                        <div class="discipline-icon">&#128218;</div>
+                        <h3>Knowledge</h3>
+                        <p>Ancient languages, meta-composition, and spell theory. Versatile caster.</p>
+                        <div class="discipline-stats">+3 Intellect, +1 Power</div>
+                    </div>
+                    <div class="discipline-card" data-discipline="nature" onclick="Game.selectDiscipline(this)">
+                        <div class="discipline-icon">&#127807;</div>
+                        <h3>Nature</h3>
+                        <p>Herbalism, healing, and natural magic. Strong support abilities.</p>
+                        <div class="discipline-stats">+3 Spirit, +1 Defense</div>
+                    </div>
+                    <div class="discipline-card" data-discipline="illusion" onclick="Game.selectDiscipline(this)">
+                        <div class="discipline-icon">&#10024;</div>
+                        <h3>Illusion</h3>
+                        <p>Psychic magic, glamours, and misdirection. Tricky and evasive.</p>
+                        <div class="discipline-stats">+2 Intellect, +2 Spirit</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg" onclick="Game.createCharacter()" id="btn-create" disabled>Enter Brakebills</button>
+        </div>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="screen-game" class="screen">
+        <div class="game-layout">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="player-info">
+                    <span class="player-name-display"></span>
+                    <span class="player-level"></span>
+                </div>
+                <div class="location-display"></div>
+                <div class="top-actions">
+                    <button class="btn btn-sm" onclick="Game.saveGame()" title="Save">&#128190; Save</button>
+                    <button class="btn btn-sm" onclick="Game.showScreen('title')">&#9776;</button>
+                </div>
+            </div>
+
+            <!-- Resource Bars -->
+            <div class="resource-bars">
+                <div class="bar-group">
+                    <label>HP</label>
+                    <div class="bar bar-hp"><div class="bar-fill" id="bar-hp"></div></div>
+                    <span class="bar-text" id="text-hp"></span>
+                </div>
+                <div class="bar-group">
+                    <label>Mana</label>
+                    <div class="bar bar-mana"><div class="bar-fill" id="bar-mana"></div></div>
+                    <span class="bar-text" id="text-mana"></span>
+                </div>
+                <div class="bar-group">
+                    <label>XP</label>
+                    <div class="bar bar-xp"><div class="bar-fill" id="bar-xp"></div></div>
+                    <span class="bar-text" id="text-xp"></span>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Narrative Panel -->
+                <div class="narrative-panel" id="narrative">
+                    <div class="narrative-log" id="narrative-log"></div>
+                </div>
+
+                <!-- Action Panel -->
+                <div class="action-panel" id="action-panel">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Bottom Tabs -->
+            <div class="bottom-tabs">
+                <button class="tab active" onclick="Game.switchTab('explore')" data-tab="explore">&#127758; Explore</button>
+                <button class="tab" onclick="Game.switchTab('spells')" data-tab="spells">&#10024; Spells</button>
+                <button class="tab" onclick="Game.switchTab('inventory')" data-tab="inventory">&#127890; Items</button>
+                <button class="tab" onclick="Game.switchTab('character')" data-tab="character">&#129497; Character</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Combat Screen -->
+    <div id="screen-combat" class="screen">
+        <div class="combat-layout">
+            <div class="combat-header">
+                <h2 id="combat-title">Combat</h2>
+            </div>
+            <div class="combat-area">
+                <div class="combatant player-side">
+                    <div class="combatant-name" id="combat-player-name"></div>
+                    <div class="bar bar-hp"><div class="bar-fill" id="combat-player-hp"></div></div>
+                    <div class="bar bar-mana"><div class="bar-fill" id="combat-player-mana"></div></div>
+                </div>
+                <div class="combat-vs">VS</div>
+                <div class="combatant enemy-side">
+                    <div class="combatant-name" id="combat-enemy-name"></div>
+                    <div class="enemy-sprite" id="combat-enemy-sprite"></div>
+                    <div class="bar bar-hp"><div class="bar-fill" id="combat-enemy-hp"></div></div>
+                </div>
+            </div>
+            <div class="combat-log" id="combat-log"></div>
+            <div class="combat-actions" id="combat-actions"></div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
